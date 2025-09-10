@@ -13,7 +13,7 @@ internal static class Utils
 
         window.Closed += (_, _) => tcs.SetResult(withResult ? window.GetResult() : null!);
         window.Show();
-
+        
         return tcs.Task;
     }
 
