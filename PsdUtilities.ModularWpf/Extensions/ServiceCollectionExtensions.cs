@@ -9,20 +9,20 @@ namespace PsdUtilities.ModularWpf.Extensions;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddView<TView, TViewModel>(this IServiceCollection services)
-        where TView : Control
+        where TView : Control, new()
         where TViewModel : ObservableObject
     {
-        services.AddTransient<TView>();
+        services.AddTransient<TView>(provider => new() { DataContext = provider.GetRequiredService<TViewModel>() });
         services.AddViewModel<TViewModel>();
 
         return services;
     }
 
     public static IServiceCollection AddCachedView<TView, TViewModel>(this IServiceCollection services)
-        where TView : Control
+        where TView : Control, new()
         where TViewModel : ObservableObject
     {
-        services.AddScoped<TView>();
+        services.AddScoped<TView>(provider => new() { DataContext = provider.GetRequiredService<TViewModel>() });
         services.AddViewModel<TViewModel>();
 
         return services;
