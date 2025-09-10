@@ -20,7 +20,7 @@ public sealed class ModularWindowsService : IModularWindowsService
         where TWindow : Window, IModularWindow, new()
     {
         var window = new TWindow();
-        return window.DisplayWindow();
+        return window.DisplayWindow(withResult: false);
     }
 
     public Task Show<TWindow>(object context)

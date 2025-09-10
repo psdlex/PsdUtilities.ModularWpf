@@ -1,3 +1,5 @@
+using System.Reflection;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using PsdUtilities.ModularWpf.ModularWindows.Models;
@@ -26,6 +28,37 @@ public static class ServiceCollectionExtensions
         where TWindow : class, IModularWindow<TResult>
     {
         services.AddTransient<TWindow>();
+        return services;
+    }
+
+    public static IServiceCollection AddModularWindows(this IServiceCollection services) => AddModularWindows(services, _ => true);
+    public static IServiceCollection AddModularWindows(this IServiceCollection services, Func<Assembly, bool> assemblyFilter)
+    {
+        AddModularWindowsService(services);
+
+        var windows = AppDomain
+            .CurrentDomain
+            .GetAssemblies()
+            .Where(assemblyFilter)
+            .SelectMany(a => a.GetTypes())
+            .Where(t =>
+                (
+                    t.IsAssignableTo(typeof(IModularWindow)) ||
+                    (
+                        t.GetInterfaces().Any(i => 
+                            i.IsGenericType &&
+                            i.GetGenericTypeDefinition() == typeof(IModularWindow<>)
+                        )
+                    )
+                ) &&
+                t.IsClass &&
+                t.IsAbstract == false
+            )
+            .ToArray();
+
+        foreach (var window in windows)
+            services.AddTransient(window);
+
         return services;
     }
 }

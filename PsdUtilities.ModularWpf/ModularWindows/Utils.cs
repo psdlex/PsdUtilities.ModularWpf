@@ -6,12 +6,12 @@ namespace PsdUtilities.ModularWpf.ModularWindows;
 
 internal static class Utils
 {
-    public static Task<object> DisplayWindow<TWindow>(this TWindow window)
+    public static Task<object> DisplayWindow<TWindow>(this TWindow window, bool withResult = true)
         where TWindow : Window, IModularWindow
     {
         var tcs = new TaskCompletionSource<object>();
 
-        window.Closed += (_, _) => tcs.SetResult(window.GetResult());
+        window.Closed += (_, _) => tcs.SetResult(withResult ? window.GetResult() : null!);
         window.Show();
 
         return tcs.Task;

@@ -16,21 +16,21 @@ public sealed class ModularWindowsWithDependenciesService : IModularWindowsWithD
     }
 
     public Task Show<TWindow>()
-        where TWindow : Window, IModularWindow, new()
+        where TWindow : Window, IModularWindow
     {
         var window = _serviceProvider.GetRequiredService<TWindow>();
-        return window.DisplayWindow();
+        return window.DisplayWindow(withResult: false);
     }
 
     public Task<object> ShowWithResult<TWindow>()
-        where TWindow : Window, IModularWindow, new()
+        where TWindow : Window, IModularWindow
     {
         var window = _serviceProvider.GetRequiredService<TWindow>();
         return window.DisplayWindow();
     }
 
     public Task<TResult> ShowWithResult<TWindow, TResult>()
-        where TWindow : Window, IModularWindow<TResult>, new()
+        where TWindow : Window, IModularWindow<TResult>
     {
         var window = _serviceProvider.GetRequiredService<TWindow>();
         return window.DisplayWindow<TWindow, TResult>();
