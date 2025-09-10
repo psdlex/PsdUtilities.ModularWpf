@@ -43,7 +43,7 @@ public static class ServiceCollectionExtensions
             .SelectMany(a => a.GetTypes())
             .Where(t =>
                 (
-                    t.IsAssignableTo(typeof(IModularWindow)) ||
+                    typeof(IModularWindow).IsAssignableFrom(t) ||
                     (
                         t.GetInterfaces().Any(i => 
                             i.IsGenericType &&
